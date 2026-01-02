@@ -9,6 +9,14 @@ export default function errorHandler(err, req, res, next) {
     }
   }
 
+  if (err instanceof multer.MulterError) {
+    if (err.code === "LIMIT_FILE_SIZE") {
+      return res.status(413).json({
+        error: "File too large (max 2MB)",
+      });
+    }
+  }
+
   const status = err.status || 500;
 
   if (process.env.NODE_ENV !== "production") {
