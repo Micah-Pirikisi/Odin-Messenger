@@ -1,21 +1,23 @@
-import verifyAccessToken from "../config/jwt";
+import { verifyAccessToken } from "../config/jwt.js";
 
 export default function authJwt(req, res, next) {
   const authHeader = req.headers.authorization;
   const token =
     req.cookies?.accessToken ||
-    (authHeader && authHeader.startsWith("Bearer ")
-      ? authHeader.slice(7)
-      : null);
+    (authHeader?.startsWith("Bearer ") ? authHeader.slice(7) : null);
 
   if (!token) {
-    return res.status(401).json({ error: "Unauthorized" });
+    const err = new Error("Unauthorized");
+    err.status = 401;
+    return next(err);
   }
 
   const payload = verifyAccessToken(token);
 
   if (!payload) {
-    return res.status(401).json({ error: "Invalid or expired token" });
+    const err = new Error("Invalid or expired token");
+    err.status = 401;
+    return next(err);
   }
 
   req.user = {
@@ -24,4 +26,4 @@ export default function authJwt(req, res, next) {
   };
 
   next();
-};
+}
