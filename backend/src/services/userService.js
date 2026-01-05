@@ -1,4 +1,4 @@
-import prisma from "../config/db";
+import prisma from "../config/db.js";
 import bcrypt from "bcrypt";
 
 const SALT_ROUNDS = 12;
@@ -14,7 +14,7 @@ export async function createUser({ email, password, name }) {
     select: {
       id: true,
       email: true,
-      name: name || email.split("@")[0],
+      name: true,
       avatarUrl: true,
       createdAt: true,
     },

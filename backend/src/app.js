@@ -5,12 +5,12 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 
 // Rate limiter
-import rateLimiter from "./middleware/rateLimiter";
+import { rateLimiter } from "./middleware/rateLimiter.js";
 
 // Routes
-import authRoutes from "./routes/authRoutes";
-import userRoutes from "./routes/userRoutes";
-import errorHandler from "./middleware/errorHandler";
+import authRoutes from "./routes/authRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
+import errorHandler from "./middleware/errorHandler.js";
 
 const app = express();
 
@@ -25,6 +25,9 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+
+// Serve uploaded files
+app.use("/uploads", express.static("public/uploads"));
 
 app.use(rateLimiter);
 

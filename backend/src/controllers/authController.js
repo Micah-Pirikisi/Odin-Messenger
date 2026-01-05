@@ -9,7 +9,7 @@ import {
   createRefreshTokenString,
   refreshExpiresAt,
 } from "../config/jwt.js";
-import { isEmail, isStrongPassword } from "../utils/validator.js";
+import { isEmail, isStrongPassword } from "../utils/validators.js";
 
 const COOKIE_OPTIONS = {
   httpOnly: true,
@@ -96,6 +96,7 @@ export async function login(req, res, next) {
       email: user.email,
       name: user.name,
       avatarUrl: user.avatarUrl,
+      accessToken,
     });
   } catch (err) {
     next(err);
@@ -151,6 +152,7 @@ export async function refresh(req, res, next) {
       email: session.user.email,
       name: session.user.name,
       avatarUrl: session.user.avatarUrl,
+      accessToken,
     });
   } catch (err) {
     next(err);

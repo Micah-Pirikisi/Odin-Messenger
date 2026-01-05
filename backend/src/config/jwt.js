@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import crypto from "crypto";
 
 const SECRET = process.env.JWT_SECRET;
 const ACCESS_EXPIRES = process.env.ACCESS_TOKEN_EXPIRES_IN || "15m";
@@ -11,13 +12,13 @@ if (!SECRET) {
   throw new Error("JWT_SECRET is not set");
 }
 
-function signAccessToken(payload) {
-  return jwt.sign({ sub: user.id, email: user.email }, SECRET, {
+export function signAccessToken(payload) {
+  return jwt.sign(payload, SECRET, {
     expiresIn: ACCESS_EXPIRES,
   });
 }
 
-function verifyAccessToken(token) {
+export function verifyAccessToken(token) {
   try {
     return jwt.verify(token, SECRET);
   } catch {
@@ -25,20 +26,12 @@ function verifyAccessToken(token) {
   }
 }
 
-function createRefreshTokenString() {
-  // use random bytes for refresh token string
-  return require("crypto").randomBytes(64).toString("hex");
+export function createRefreshTokenString() {
+  return crypto.randomBytes(64).toString("hex");
 }
 
-function refreshExpiresAt() {
+export function refreshExpiresAt() {
   const d = new Date();
   d.setDate(d.getDate() + REFRESH_EXPIRES_DAYS);
   return d;
 }
-
-module.exports = {
-  signAccessToken,
-  verifyAccessToken,
-  createRefreshTokenString,
-  refreshExpiresAt,
-};

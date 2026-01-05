@@ -20,7 +20,9 @@ export default function authJwt(req, res, next) {
     return next(err);
   }
 
+  // include both `sub` and `id` for compatibility across controllers
   req.user = {
+    sub: payload.sub,
     id: payload.sub,
     email: payload.email,
   };
